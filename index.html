@@ -10,7 +10,7 @@
     body {
       margin: 0;
       overflow: hidden;
-      background-color: #1a1a1a;
+      background-color: #121315;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
       user-select: none;
       -webkit-user-select: none;
@@ -20,78 +20,76 @@
     /* ローディング画面 */
     #loading-overlay {
       position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      background: #181818;
+      background: #141518;
       display: flex; flex-direction: column; justify-content: center; align-items: center;
       color: #fff; z-index: 100;
       transition: opacity 0.4s ease;
     }
+    #loading-title {
+      font-size: 20px; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 8px;
+    }
     #loading-bar-container {
-      width: 240px; height: 10px; background: #333; border-radius: 5px; overflow: hidden; margin-top: 16px;
+      width: 260px; height: 8px; background: #262930; border-radius: 4px; overflow: hidden; margin-top: 14px;
     }
     #loading-bar {
-      width: 0%; height: 100%; background: #00d4aa; transition: width 0.2s ease;
+      width: 0%; height: 100%; background: linear-gradient(90deg, #00d4aa, #00b4d8); transition: width 0.2s ease;
     }
     #loading-text {
-      margin-top: 10px; font-size: 13px; color: #aaa;
+      margin-top: 12px; font-size: 13px; color: #9aa0a6; font-variant-numeric: tabular-nums;
     }
 
-    /* 操作ガイドオーバーレイ */
-    #overlay {
-      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.72);
-      display: flex; flex-direction: column; justify-content: center; align-items: center;
-      color: white; cursor: pointer; text-align: center; z-index: 30;
-      padding: 20px;
-    }
-    #overlay h2 { margin: 0 0 12px 0; font-size: 20px; }
-    .guide-box {
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 8px;
-      padding: 14px 20px;
-      font-size: 13px;
-      line-height: 1.8;
-      max-width: 380px;
-      text-align: left;
-    }
-    .start-prompt {
-      margin-top: 18px;
-      background: #00d4aa;
-      color: #111;
-      font-weight: bold;
-      padding: 10px 24px;
-      border-radius: 20px;
-      font-size: 14px;
-    }
-
-    /* UIコンテナ */
+    /* トップナビゲーションバー */
     #top-bar {
-      position: absolute; top: 10px; left: 10px; right: 10px;
+      position: absolute; top: 12px; left: 12px; right: 12px;
       display: flex; justify-content: space-between; align-items: center;
-      pointer-events: none; z-index: 20;
+      pointer-events: none; z-index: 20; gap: 8px;
     }
     #mode-indicator {
-      background: rgba(0, 0, 0, 0.75); color: #00ffcc; padding: 7px 12px;
-      border-radius: 6px; font-size: 12px; font-weight: bold; pointer-events: auto;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+      background: rgba(18, 20, 24, 0.88); color: #00ffcc; padding: 7px 14px;
+      border-radius: 8px; font-size: 13px; font-weight: 700; pointer-events: auto;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.12);
+      backdrop-filter: blur(8px);
+      white-space: nowrap;
     }
     #nav-controls {
       display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end;
       pointer-events: auto;
     }
     .btn {
-      background: rgba(30, 30, 30, 0.85); color: white; border: 1px solid rgba(255,255,255,0.25);
-      padding: 7px 11px; border-radius: 6px; font-size: 12px; font-weight: 600;
-      cursor: pointer; backdrop-filter: blur(6px); transition: all 0.15s ease;
+      background: rgba(26, 29, 35, 0.88); color: #f0f0f0; border: 1px solid rgba(255,255,255,0.2);
+      padding: 7px 12px; border-radius: 8px; font-size: 12px; font-weight: 600;
+      cursor: pointer; backdrop-filter: blur(8px); transition: all 0.15s ease;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
     }
-    .btn:hover, .btn:active {
-      background: rgba(60, 60, 60, 0.95);
+    .btn:hover {
+      background: rgba(45, 50, 60, 0.95);
       border-color: #00ffcc;
       color: #00ffcc;
+      transform: translateY(-1px);
     }
     .btn.active {
-      background: #00d4aa; color: #111; border-color: #00d4aa;
+      background: #00d4aa; color: #0a1118; border-color: #00d4aa; font-weight: 700;
     }
+
+    /* 下部ガイドバー */
+    #bottom-guide {
+      position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%);
+      background: rgba(18, 20, 24, 0.88); color: #e2e8f0;
+      padding: 8px 18px; border-radius: 20px; font-size: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.15);
+      backdrop-filter: blur(8px);
+      pointer-events: auto; z-index: 20;
+      display: flex; gap: 14px; align-items: center; white-space: nowrap;
+    }
+    #bottom-guide b { color: #00ffcc; }
+    .height-tag {
+      background: rgba(255,255,255,0.1); padding: 2px 8px; border-radius: 10px; color: #a5f3fc;
+    }
+    .guide-btn {
+      background: rgba(255,255,255,0.15); border: none; color: #fff;
+      padding: 2px 7px; border-radius: 4px; font-size: 11px; cursor: pointer;
+    }
+    .guide-btn:hover { background: #00d4aa; color: #000; }
 
     /* スマホ用タッチUI */
     #mobile-controls {
@@ -111,7 +109,7 @@
     #joystick-knob {
       position: absolute; top: 35px; left: 35px;
       width: 50px; height: 50px;
-      background: rgba(255, 255, 255, 0.65);
+      background: rgba(255, 255, 255, 0.7);
       border-radius: 50%;
       pointer-events: none;
       box-shadow: 0 2px 6px rgba(0,0,0,0.3);
@@ -119,6 +117,12 @@
     #look-zone {
       position: absolute; top: 0; right: 0; width: 65%; height: 100%;
       pointer-events: auto; touch-action: none;
+    }
+
+    @media (max-width: 768px) {
+      #bottom-guide { display: none; }
+      #mode-indicator { font-size: 11px; padding: 6px 10px; }
+      .btn { font-size: 11px; padding: 6px 9px; }
     }
   </style>
 
@@ -135,23 +139,34 @@
 
   <!-- ローディング表示 -->
   <div id="loading-overlay">
-    <h3 style="margin: 0; font-size: 18px;">教室3Dモデルを読み込み中...</h3>
+    <div id="loading-title">宮崎大学 dot cube 展示教室</div>
     <div id="loading-bar-container">
       <div id="loading-bar"></div>
     </div>
-    <div id="loading-text">0%</div>
+    <div id="loading-text">3Dモデルを読み込み中...</div>
   </div>
 
   <!-- トップバー -->
   <div id="top-bar">
-    <div id="mode-indicator">モード: 俯瞰（回転・拡縮）</div>
+    <div id="mode-indicator">モード: 歩行 (WASDで移動)</div>
     <div id="nav-controls">
-      <button id="toggle-ceiling-btn" class="btn" title="天井の表示/非表示を切り替え">天井: 非表示</button>
-      <button id="jump-l313-btn" class="btn">L313（展示）</button>
+      <button id="toggle-ceiling-btn" class="btn" title="天井の表示/非表示を切り替え">天井: 表示中</button>
+      <button id="jump-l313-btn" class="btn active">L313（展示）</button>
       <button id="jump-l314-btn" class="btn">L314（ホラー）</button>
+      <button id="jump-corridor-btn" class="btn">廊下</button>
       <button id="jump-overview-btn" class="btn">全体俯瞰</button>
-      <button id="toggle-mode-btn" class="btn active">歩行モード</button>
+      <button id="toggle-mode-btn" class="btn">俯瞰切替</button>
     </div>
+  </div>
+
+  <!-- 下部操作ガイド（PC） -->
+  <div id="bottom-guide">
+    <span><b>[W/A/S/D]</b> または <b>[↑/←/↓/→]</b>: 移動</span>
+    <span><b>マウスドラッグ</b>: 視線変更 (ダブルクリックでポインタ固定)</span>
+    <span><b>[Space]/[Shift]</b> または <b>[E]/[Q]</b>: 上昇/下降</span>
+    <span class="height-tag">目線高: <span id="height-display">1.85m</span></span>
+    <button id="height-up-btn" class="guide-btn" title="目線を高く">▲ 高く</button>
+    <button id="height-down-btn" class="guide-btn" title="目線を低く">▼ 低く</button>
   </div>
 
   <!-- スマホ用コントローラーUI -->
@@ -162,26 +177,9 @@
     <div id="look-zone"></div>
   </div>
 
-  <!-- 操作ガイドオーバーレイ -->
-  <div id="overlay" style="display: none;">
-    <h2>クリックして歩行を開始</h2>
-    <div class="guide-box">
-      <b>【PC】</b><br>
-      ・移動: <b>W / A / S / D</b><br>
-      ・視点: <b>マウス移動</b><br>
-      ・上昇 / 下降: <b>Space / Shift</b><br>
-      ・モード切替 / マウス解除: <b>Esc または V</b><br><br>
-      <b>【スマートフォン】</b><br>
-      ・移動: <b>左下のバーチャルスティック</b><br>
-      ・視点: <b>画面右側をスワイプ</b>
-    </div>
-    <div class="start-prompt">歩行スタート</div>
-  </div>
-
   <script type="module">
     import * as THREE from 'three';
     import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-    import { PointerLockControls } from 'three/addons/controls/PointerLockControls.js';
     import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
     const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
@@ -196,62 +194,83 @@
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.05;
+    renderer.toneMappingExposure = 1.08;
     document.body.appendChild(renderer.domElement);
 
     // ライティング
-    const ambientLight = new THREE.AmbientLight(0xffffff, 1.2);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 1.25);
     scene.add(ambientLight);
 
-    const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444455, 0.8);
+    const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444855, 0.85);
     scene.add(hemiLight);
 
-    const dirLight = new THREE.DirectionalLight(0xfff7ea, 1.5);
+    const dirLight = new THREE.DirectionalLight(0xfff7ea, 1.6);
     dirLight.position.set(10, 20, 10);
     scene.add(dirLight);
 
-    // コントローラー
-    const pointerControls = new PointerLockControls(camera, document.body);
+    // 俯瞰用 OrbitControls
     const orbitControls = new OrbitControls(camera, renderer.domElement);
     orbitControls.enableDamping = true;
     orbitControls.dampingFactor = 0.08;
-    orbitControls.maxPolarAngle = Math.PI / 2 + 0.05; // 地面下へ潜らないように
+    orbitControls.maxPolarAngle = Math.PI / 2 + 0.05;
+    orbitControls.enabled = false;
 
-    let isWalkMode = false;
-    let ceilingVisible = false; // 俯瞰時は部屋が見通せるようデフォルト非表示
+    // 視点・モード管理
+    // 目線高さ: 1.85m（大人の立ち目線で机や展示パネルを見下ろせる自然な高さ）
+    const DEFAULT_EYE_HEIGHT = 1.85;
+    let isWalkMode = true;
+    let ceilingVisible = true;
     const ceilingObjects = [];
+
+    // 歩行モード時の視線角度 (Yaw: 水平角, Pitch: 垂直角)
+    let yaw = 0;   // 0は -Z 方向（黒板側奥）
+    let pitch = -0.05; // わずかに斜め下を見下ろす自然な角度
 
     // UIエレメント
     const loadingOverlay = document.getElementById('loading-overlay');
     const loadingBar = document.getElementById('loading-bar');
     const loadingText = document.getElementById('loading-text');
-    const overlay = document.getElementById('overlay');
     const modeIndicator = document.getElementById('mode-indicator');
     const toggleBtn = document.getElementById('toggle-mode-btn');
     const ceilingBtn = document.getElementById('toggle-ceiling-btn');
-    const mobileControls = document.getElementById('mobile-controls');
     const jumpL313Btn = document.getElementById('jump-l313-btn');
     const jumpL314Btn = document.getElementById('jump-l314-btn');
+    const jumpCorridorBtn = document.getElementById('jump-corridor-btn');
     const jumpOverviewBtn = document.getElementById('jump-overview-btn');
+    const heightDisplay = document.getElementById('height-display');
+    const heightUpBtn = document.getElementById('height-up-btn');
+    const heightDownBtn = document.getElementById('height-down-btn');
+    const mobileControls = document.getElementById('mobile-controls');
 
-    // 定点カメラ座標（glTFの座標系：X=0〜7, Y=高さ0〜3, Z=手前0〜奥-15）
-    // L313（展示教室）：中央 X=3.5, Z=-11.25, 目線高 Y=1.65
-    const POS_L313 = new THREE.Vector3(3.5, 1.65, -11.0);
-    // L314（ホラーゲーム教室）：中央 X=3.5, Z=-3.75, 目線高 Y=1.65
-    const POS_L314 = new THREE.Vector3(3.5, 1.65, -3.75);
-    // 俯瞰（全体）：教室の上空手前から見下ろす
+    // 定点カメラ座標（glTF座標系：X=0〜7m, Y=高さ0〜3m, Z=手前0〜奥-15m）
+    // L313（展示教室）：後方ドア付近から教卓・黒板・展示机を一望
+    const POS_L313 = new THREE.Vector3(3.5, DEFAULT_EYE_HEIGHT, -9.2);
+    // L314（ホラー・VR教室）：後方入口から全体を一望
+    const POS_L314 = new THREE.Vector3(3.5, DEFAULT_EYE_HEIGHT, -2.0);
+    // 廊下：東側廊下のドア前
+    const POS_CORRIDOR = new THREE.Vector3(8.2, DEFAULT_EYE_HEIGHT, -7.5);
+    // 俯瞰：全体を見下ろす上空
     const POS_OVERVIEW = new THREE.Vector3(3.5, 14.5, 3.5);
     const TARGET_OVERVIEW = new THREE.Vector3(3.5, 0.5, -7.5);
 
-    // 初期カメラ位置（俯瞰）
-    camera.position.copy(POS_OVERVIEW);
-    orbitControls.target.copy(TARGET_OVERVIEW);
+    // 初期位置: L313展示教室の中に自然な立ち目線で配置！
+    camera.position.copy(POS_L313);
+    updateCameraRotation();
+
+    function updateCameraRotation() {
+      const qYaw = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), yaw);
+      const qPitch = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), pitch);
+      camera.quaternion.copy(qYaw.multiply(qPitch));
+    }
 
     function updateCeilingVisibility() {
-      ceilingObjects.forEach(obj => {
-        obj.visible = ceilingVisible;
-      });
+      ceilingObjects.forEach(obj => { obj.visible = ceilingVisible; });
       ceilingBtn.innerText = `天井: ${ceilingVisible ? '表示中' : '非表示'}`;
+      if (ceilingVisible) {
+        ceilingBtn.classList.remove('active');
+      } else {
+        ceilingBtn.classList.add('active');
+      }
     }
 
     function toggleCeiling() {
@@ -265,37 +284,36 @@
       updateCeilingVisibility();
     }
 
-    function updateModeDisplay() {
-      if (isWalkMode) {
-        modeIndicator.innerText = 'モード: 歩行 (WASDで移動)';
-        toggleBtn.innerText = '俯瞰モードへ';
-        toggleBtn.classList.remove('active');
-        if (isTouchDevice) mobileControls.style.display = 'block';
-        setCeilingState(true); // 歩行時は天井を表示
-      } else {
-        modeIndicator.innerText = 'モード: 俯瞰（ドラッグで回転・拡縮）';
-        toggleBtn.innerText = '歩行モードへ';
-        toggleBtn.classList.add('active');
-        mobileControls.style.display = 'none';
-        setCeilingState(false); // 俯瞰時は内部が見えるよう天井を非表示
+    function updateHeightDisplay() {
+      if (heightDisplay) {
+        heightDisplay.innerText = camera.position.y.toFixed(2) + 'm';
       }
+    }
+
+    function setActiveJumpBtn(activeBtn) {
+      [jumpL313Btn, jumpL314Btn, jumpCorridorBtn, jumpOverviewBtn].forEach(b => {
+        if (b) b.classList.remove('active');
+      });
+      if (activeBtn) activeBtn.classList.add('active');
     }
 
     function setWalkMode(enable) {
       isWalkMode = enable;
       if (isWalkMode) {
         orbitControls.enabled = false;
-        if (!isTouchDevice) {
-          overlay.style.display = 'flex';
-        } else {
-          overlay.style.display = 'none';
-        }
+        modeIndicator.innerText = 'モード: 歩行 (WASDで移動)';
+        toggleBtn.innerText = '俯瞰モードへ';
+        if (isTouchDevice) mobileControls.style.display = 'block';
+        setCeilingState(true);
       } else {
-        if (!isTouchDevice) pointerControls.unlock();
+        if (document.pointerLockElement) document.exitPointerLock();
         orbitControls.enabled = true;
-        overlay.style.display = 'none';
+        modeIndicator.innerText = 'モード: 俯瞰 (ドラッグで回転・拡縮)';
+        toggleBtn.innerText = '歩行モードへ';
+        if (isTouchDevice) mobileControls.style.display = 'none';
+        setCeilingState(false);
       }
-      updateModeDisplay();
+      updateHeightDisplay();
     }
 
     function switchMode() {
@@ -303,57 +321,167 @@
     }
     toggleBtn.addEventListener('click', switchMode);
 
-    overlay.addEventListener('click', () => {
-      if (isWalkMode && !isTouchDevice) pointerControls.lock();
-    });
-    pointerControls.addEventListener('lock', () => overlay.style.display = 'none');
-    pointerControls.addEventListener('unlock', () => {
-      if (isWalkMode && !isTouchDevice) overlay.style.display = 'flex';
-    });
-
     // テレポートジャンプボタン
     jumpL313Btn.addEventListener('click', () => {
       camera.position.copy(POS_L313);
-      camera.quaternion.set(0, 0, 0, 1);
-      orbitControls.target.set(3.5, 1.65, -13.5);
+      yaw = 0;
+      pitch = -0.05;
+      updateCameraRotation();
       setWalkMode(true);
+      setActiveJumpBtn(jumpL313Btn);
     });
 
     jumpL314Btn.addEventListener('click', () => {
       camera.position.copy(POS_L314);
-      camera.quaternion.set(0, 0, 0, 1);
-      orbitControls.target.set(3.5, 1.65, -6.5);
+      yaw = 0;
+      pitch = -0.05;
+      updateCameraRotation();
       setWalkMode(true);
+      setActiveJumpBtn(jumpL314Btn);
+    });
+
+    jumpCorridorBtn.addEventListener('click', () => {
+      camera.position.copy(POS_CORRIDOR);
+      yaw = 0;
+      pitch = -0.05;
+      updateCameraRotation();
+      setWalkMode(true);
+      setActiveJumpBtn(jumpCorridorBtn);
     });
 
     jumpOverviewBtn.addEventListener('click', () => {
       camera.position.copy(POS_OVERVIEW);
       orbitControls.target.copy(TARGET_OVERVIEW);
       setWalkMode(false);
+      setActiveJumpBtn(jumpOverviewBtn);
     });
 
-    // キーボード入力 (PC)
-    const move = { forward: false, backward: false, left: false, right: false, up: false, down: false };
-    document.addEventListener('keydown', (e) => {
-      if (e.code === 'KeyV') { switchMode(); return; }
+    // 高さ微調整ボタン
+    if (heightUpBtn) {
+      heightUpBtn.addEventListener('click', () => {
+        camera.position.y = Math.min(2.85, camera.position.y + 0.15);
+        updateHeightDisplay();
+      });
+    }
+    if (heightDownBtn) {
+      heightDownBtn.addEventListener('click', () => {
+        camera.position.y = Math.max(1.30, camera.position.y - 0.15);
+        updateHeightDisplay();
+      });
+    }
+
+    // ==========================================
+    // キーボード操作 (PC) - WASDが確実に動作
+    // ==========================================
+    const keys = {
+      forward: false,
+      backward: false,
+      left: false,
+      right: false,
+      up: false,
+      down: false
+    };
+
+    function handleKey(e, isPressed) {
+      const code = e.code || '';
+      const key = (e.key || '').toLowerCase();
+
+      // W / ↑
+      if (code === 'KeyW' || key === 'w' || code === 'ArrowUp' || key === 'arrowup') {
+        keys.forward = isPressed;
+      }
+      // S / ↓
+      if (code === 'KeyS' || key === 's' || code === 'ArrowDown' || key === 'arrowdown') {
+        keys.backward = isPressed;
+      }
+      // A / ←
+      if (code === 'KeyA' || key === 'a' || code === 'ArrowLeft' || key === 'arrowleft') {
+        keys.left = isPressed;
+      }
+      // D / →
+      if (code === 'KeyD' || key === 'd' || code === 'ArrowRight' || key === 'arrowright') {
+        keys.right = isPressed;
+      }
+      // Space / E (上昇)
+      if (code === 'Space' || code === 'KeyE' || key === 'e') {
+        keys.up = isPressed;
+      }
+      // Shift / Q (下降)
+      if (code === 'ShiftLeft' || code === 'ShiftRight' || code === 'KeyQ' || key === 'q') {
+        keys.down = isPressed;
+      }
+    }
+
+    window.addEventListener('keydown', (e) => {
+      if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space'].includes(e.code)) {
+        e.preventDefault();
+      }
+      handleKey(e, true);
+    });
+
+    window.addEventListener('keyup', (e) => {
+      handleKey(e, false);
+    });
+
+    // フォーカスが外れた場合はキー入力をリセット
+    window.addEventListener('blur', () => {
+      for (const k in keys) keys[k] = false;
+    });
+
+    // ==========================================
+    // マウスドラッグ & ポインタロック操作
+    // ==========================================
+    let isMouseDown = false;
+    let prevMouseX = 0;
+    let prevMouseY = 0;
+
+    renderer.domElement.addEventListener('mousedown', (e) => {
       if (!isWalkMode) return;
-      if (e.code === 'KeyW' || e.code === 'ArrowUp') move.forward = true;
-      if (e.code === 'KeyS' || e.code === 'ArrowDown') move.backward = true;
-      if (e.code === 'KeyA' || e.code === 'ArrowLeft') move.left = true;
-      if (e.code === 'KeyD' || e.code === 'ArrowRight') move.right = true;
-      if (e.code === 'Space') move.up = true;
-      if (e.code === 'ShiftLeft' || e.code === 'ShiftRight') move.down = true;
-    });
-    document.addEventListener('keyup', (e) => {
-      if (e.code === 'KeyW' || e.code === 'ArrowUp') move.forward = false;
-      if (e.code === 'KeyS' || e.code === 'ArrowDown') move.backward = false;
-      if (e.code === 'KeyA' || e.code === 'ArrowLeft') move.left = false;
-      if (e.code === 'KeyD' || e.code === 'ArrowRight') move.right = false;
-      if (e.code === 'Space') move.up = false;
-      if (e.code === 'ShiftLeft' || e.code === 'ShiftRight') move.down = false;
+      isMouseDown = true;
+      prevMouseX = e.clientX;
+      prevMouseY = e.clientY;
     });
 
-    // タッチ操作（スマホ用バーチャルスティック）
+    window.addEventListener('mouseup', () => {
+      isMouseDown = false;
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (!isWalkMode) return;
+
+      // 1. ポインタロック中
+      if (document.pointerLockElement === renderer.domElement) {
+        yaw -= e.movementX * 0.0024;
+        pitch -= e.movementY * 0.0024;
+        pitch = Math.max(-1.42, Math.min(1.42, pitch));
+        updateCameraRotation();
+        return;
+      }
+
+      // 2. マウスドラッグ中
+      if (isMouseDown) {
+        const dx = e.clientX - prevMouseX;
+        const dy = e.clientY - prevMouseY;
+        prevMouseX = e.clientX;
+        prevMouseY = e.clientY;
+
+        yaw -= dx * 0.0035;
+        pitch -= dy * 0.0035;
+        pitch = Math.max(-1.42, Math.min(1.42, pitch));
+        updateCameraRotation();
+      }
+    });
+
+    // ダブルクリックでポインタ固定 (FPSモード)
+    renderer.domElement.addEventListener('dblclick', () => {
+      if (isWalkMode && !isTouchDevice) {
+        renderer.domElement.requestPointerLock();
+      }
+    });
+
+    // ==========================================
+    // スマホ用タッチ操作
+    // ==========================================
     let touchMoveVector = { x: 0, y: 0 };
     const joystickZone = document.getElementById('joystick-zone');
     const joystickKnob = document.getElementById('joystick-knob');
@@ -392,18 +520,16 @@
     joystickZone.addEventListener('touchend', resetJoy);
     joystickZone.addEventListener('touchcancel', resetJoy);
 
-    // タッチ視点回転（右画面スワイプ）
+    // タッチスワイプ視線回転
     const lookZone = document.getElementById('look-zone');
     let lookTouchId = null;
     let lastLookX = 0, lastLookY = 0;
-    let euler = new THREE.Euler(0, 0, 0, 'YXZ');
 
     lookZone.addEventListener('touchstart', (e) => {
       const touch = e.changedTouches[0];
       lookTouchId = touch.identifier;
       lastLookX = touch.clientX;
       lastLookY = touch.clientY;
-      euler.setFromQuaternion(camera.quaternion);
     }, { passive: true });
 
     lookZone.addEventListener('touchmove', (e) => {
@@ -415,11 +541,10 @@
           lastLookX = touch.clientX;
           lastLookY = touch.clientY;
 
-          euler.setFromQuaternion(camera.quaternion);
-          euler.y -= deltaX * 0.005;
-          euler.x -= deltaY * 0.005;
-          euler.x = Math.max(-Math.PI / 2.1, Math.min(Math.PI / 2.1, euler.x));
-          camera.quaternion.setFromEuler(euler);
+          yaw -= deltaX * 0.0055;
+          pitch -= deltaY * 0.0055;
+          pitch = Math.max(-1.42, Math.min(1.42, pitch));
+          updateCameraRotation();
         }
       }
     }, { passive: true });
@@ -428,19 +553,19 @@
     lookZone.addEventListener('touchend', resetLook);
     lookZone.addEventListener('touchcancel', resetLook);
 
-    // モデル読み込み (classroom.glb を指定！)
+    // ==========================================
+    // モデル読み込み (classroom.glb)
+    // ==========================================
     const loader = new GLTFLoader();
     loader.load(
       './classroom.glb',
       (gltf) => {
         const model = gltf.scene;
 
-        // 天井オブジェクトの検出と登録（俯瞰・歩行での透過切替用）
         model.traverse((child) => {
           if (child.isMesh) {
             child.castShadow = true;
             child.receiveShadow = true;
-            // 天井オブジェクト
             if (child.name.toLowerCase().includes('ceiling') || child.name.includes('Ceiling')) {
               ceilingObjects.push(child);
             }
@@ -450,13 +575,13 @@
         scene.add(model);
         updateCeilingVisibility();
 
-        // ローディング画面を非表示
+        // ローディング非表示
         loadingOverlay.style.opacity = '0';
         setTimeout(() => {
           loadingOverlay.style.display = 'none';
         }, 400);
 
-        console.log('Classroom model successfully loaded!');
+        console.log('Classroom model loaded successfully!');
       },
       (xhr) => {
         if (xhr.total > 0) {
@@ -474,35 +599,62 @@
       }
     );
 
-    // メインループ
+    // ==========================================
+    // メインアニメーションループ
+    // ==========================================
     const clock = new THREE.Clock();
-    const speed = 4.2;
+    const moveSpeed = 4.2;
 
     function animate() {
       requestAnimationFrame(animate);
       const delta = Math.min(clock.getDelta(), 0.1);
 
       if (isWalkMode) {
-        if (!isTouchDevice && pointerControls.isLocked) {
-          if (move.forward) pointerControls.moveForward(speed * delta);
-          if (move.backward) pointerControls.moveForward(-speed * delta);
-          if (move.left) pointerControls.moveRight(-speed * delta);
-          if (move.right) pointerControls.moveRight(speed * delta);
-          if (move.up) camera.position.y += speed * delta;
-          if (move.down) camera.position.y -= speed * delta;
-        } else if (isTouchDevice) {
-          // スマホ用移動計算（向いている水平方向へ進む）
-          const forward = new THREE.Vector3(0, 0, -1).applyAxisAngle(new THREE.Vector3(0, 1, 0), euler.y);
-          const right = new THREE.Vector3(1, 0, 0).applyAxisAngle(new THREE.Vector3(0, 1, 0), euler.y);
+        // 水平方向の前進・右方向ベクトル（Yawから算出）
+        const forward = new THREE.Vector3(0, 0, -1).applyAxisAngle(new THREE.Vector3(0, 1, 0), yaw);
+        const right = new THREE.Vector3(1, 0, 0).applyAxisAngle(new THREE.Vector3(0, 1, 0), yaw);
 
-          camera.position.addScaledVector(forward, touchMoveVector.y * speed * delta);
-          camera.position.addScaledVector(right, touchMoveVector.x * speed * delta);
+        // PCキーボード移動 (WASD)
+        if (keys.forward) camera.position.addScaledVector(forward, moveSpeed * delta);
+        if (keys.backward) camera.position.addScaledVector(forward, -moveSpeed * delta);
+        if (keys.left) camera.position.addScaledVector(right, -moveSpeed * delta);
+        if (keys.right) camera.position.addScaledVector(right, moveSpeed * delta);
+        if (keys.up) camera.position.y += moveSpeed * 0.75 * delta;
+        if (keys.down) camera.position.y -= moveSpeed * 0.75 * delta;
+
+        // スマホ仮想ジョイスティック移動
+        if (isTouchDevice && (touchMoveVector.x !== 0 || touchMoveVector.y !== 0)) {
+          camera.position.addScaledVector(forward, touchMoveVector.y * moveSpeed * delta);
+          camera.position.addScaledVector(right, touchMoveVector.x * moveSpeed * delta);
         }
 
-        // 床下に落ちないように最低高さを制限
-        if (camera.position.y < 0.8) camera.position.y = 0.8;
+        // 床・天井の高さ制限（めり込み防止）
+        if (camera.position.y < 1.30) camera.position.y = 1.30;
+        if (camera.position.y > 2.85) camera.position.y = 2.85;
+
+        updateHeightDisplay();
       } else {
+        // 俯瞰 (OrbitControls) モード
         orbitControls.update();
+
+        // 俯瞰時もWASDでパン（水平移動）可能！
+        const camDir = new THREE.Vector3();
+        camera.getWorldDirection(camDir);
+        camDir.y = 0;
+        camDir.normalize();
+        const camRight = new THREE.Vector3().crossVectors(camDir, new THREE.Vector3(0, 1, 0)).normalize();
+
+        const panVec = new THREE.Vector3();
+        if (keys.forward) panVec.add(camDir);
+        if (keys.backward) panVec.sub(camDir);
+        if (keys.left) panVec.sub(camRight);
+        if (keys.right) panVec.add(camRight);
+
+        if (panVec.lengthSq() > 0) {
+          panVec.normalize().multiplyScalar(moveSpeed * 1.8 * delta);
+          camera.position.add(panVec);
+          orbitControls.target.add(panVec);
+        }
       }
 
       renderer.render(scene, camera);
@@ -515,7 +667,10 @@
       renderer.setSize(window.innerWidth, window.innerHeight);
     });
 
-    updateModeDisplay();
+    if (isTouchDevice) {
+      mobileControls.style.display = 'block';
+    }
+    updateHeightDisplay();
   </script>
 </body>
 </html>
