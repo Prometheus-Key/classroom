@@ -185,7 +185,8 @@
     const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
 
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x181a1d);
+    // 窓の外に見える爽やかな昼間の青空スカイブルー
+    scene.background = new THREE.Color(0x90c8f5);
 
     const camera = new THREE.PerspectiveCamera(65, window.innerWidth / window.innerHeight, 0.1, 1000);
 
@@ -194,19 +195,75 @@
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.08;
+    renderer.toneMappingExposure = 1.05;
     document.body.appendChild(renderer.domElement);
 
-    // ライティング
-    const ambientLight = new THREE.AmbientLight(0xffffff, 1.25);
+    // 屋外の地面・遠景（窓の外を見たときにリアルな昼のグラウンドが見える）
+    const groundGeo = new THREE.PlaneGeometry(120, 120);
+    const groundMat = new THREE.MeshBasicMaterial({ color: 0x82a572 }); // 柔らかな芝生グリーン
+    const groundMesh = new THREE.Mesh(groundGeo, groundMat);
+    groundMesh.rotation.x = -Math.PI / 2;
+    groundMesh.position.set(3.5, -0.1, -7.5);
+    scene.add(groundMesh);
+
+    // ==========================================
+    // ライティング設定（L314は暗室ホラー、L313は明るい展示室）
+    // ==========================================
+    // 全体環境光（暗室が明るくなりすぎないよう0.15に抑制）
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.15);
     scene.add(ambientLight);
 
-    const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444855, 0.85);
+    const hemiLight = new THREE.HemisphereLight(0x90c8f5, 0x222228, 0.12);
     scene.add(hemiLight);
 
-    const dirLight = new THREE.DirectionalLight(0xfff7ea, 1.6);
-    dirLight.position.set(10, 20, 10);
-    scene.add(dirLight);
+    // 西窓からの自然な太陽光（L313展示教室の窓から差し込む）
+    const sunLight = new THREE.DirectionalLight(0xfffaec, 1.4);
+    sunLight.position.set(-16, 14, -11.2);
+    sunLight.target.position.set(3.5, 0.5, -11.2);
+    scene.add(sunLight);
+    scene.add(sunLight.target);
+
+    // 【1. L313（展示教室）の照明】: 9基の蛍光灯 ＋ 黒板灯で白く明るい展示空間
+    const l313Lights = new THREE.Group();
+    const fluorCoords = [
+      [2.2, 2.85, -9.4], [4.2, 2.85, -9.4], [6.0, 2.85, -9.4],
+      [2.2, 2.85, -11.3], [4.2, 2.85, -11.3], [6.0, 2.85, -11.3],
+      [2.2, 2.85, -13.2], [4.2, 2.85, -13.2], [6.0, 2.85, -13.2]
+    ];
+    fluorCoords.forEach(([lx, ly, lz]) => {
+      const pl = new THREE.PointLight(0xfff8f0, 20, 6.2, 1.8);
+      pl.position.set(lx, ly, lz);
+      l313Lights.add(pl);
+    });
+    const bbLight = new THREE.PointLight(0xfff2e0, 24, 7.0, 1.8);
+    bbLight.position.set(3.5, 2.85, -14.6);
+    l313Lights.add(bbLight);
+    scene.add(l313Lights);
+
+    // 【2. 廊下の照明】: 天井蛍光灯による照明
+    const corridorLights = new THREE.Group();
+    [-1.5, 3.5, 7.5, 11.5, 15.5].forEach(yBlender => {
+      const pl = new THREE.PointLight(0xfff8f0, 18, 5.5, 1.8);
+      pl.position.set(8.35, 2.85, -yBlender);
+      corridorLights.add(pl);
+    });
+    scene.add(corridorLights);
+
+    // 【3. L314（ホラーゲーム暗室教室）の演出照明】
+    // 天井照明は完全消灯！黒カーテン閉め切り！
+    // スクリーンプロジェクターの青白い不気味な映像光 ＋ モニター光のみが暗闇に浮かび上がる
+    const horrorScreenLight = new THREE.PointLight(0x3377ff, 18, 7.0, 1.6);
+    horrorScreenLight.position.set(4.58, 1.80, -6.8);
+    scene.add(horrorScreenLight);
+
+    const monitorLight = new THREE.PointLight(0x55aaff, 8, 4.0, 1.8);
+    monitorLight.position.set(1.85, 0.95, -5.2);
+    scene.add(monitorLight);
+
+    // 暗室でもVR機器や机の輪郭が判別できるよう、ごく微弱なホラー暗室間接光
+    const l314Ambient = new THREE.PointLight(0x223355, 6, 8.5, 1.6);
+    l314Ambient.position.set(3.5, 2.2, -3.75);
+    scene.add(l314Ambient);
 
     // 俯瞰用 OrbitControls
     const orbitControls = new OrbitControls(camera, renderer.domElement);
@@ -566,8 +623,23 @@
           if (child.isMesh) {
             child.castShadow = true;
             child.receiveShadow = true;
+            // 天井オブジェクトの登録
             if (child.name.toLowerCase().includes('ceiling') || child.name.includes('Ceiling')) {
               ceilingObjects.push(child);
+            }
+            // 窓ガラス・引き戸ガラスを美しくリアルな透過ガラスに設定
+            if (child.name.toLowerCase().includes('glass') || child.name.includes('Glass')) {
+              const isFrosted = child.name.toLowerCase().includes('frosted') || child.name.includes('Door');
+              child.material = new THREE.MeshPhysicalMaterial({
+                color: isFrosted ? 0xf0f5ff : 0xffffff,
+                transparent: true,
+                opacity: isFrosted ? 0.70 : 0.20,
+                roughness: isFrosted ? 0.40 : 0.04,
+                metalness: 0.05,
+                transmission: isFrosted ? 0.65 : 0.95,
+                ior: 1.52,
+                depthWrite: false
+              });
             }
           }
         });
