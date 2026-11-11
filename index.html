@@ -78,10 +78,11 @@
       padding: 8px 18px; border-radius: 20px; font-size: 12px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.15);
       backdrop-filter: blur(8px);
-      pointer-events: auto; z-index: 20;
+      pointer-events: none; z-index: 20;
       display: flex; gap: 14px; align-items: center; white-space: nowrap;
     }
     #bottom-guide b { color: #00ffcc; }
+    #bottom-guide button { pointer-events: auto; }
     .height-tag {
       background: rgba(255,255,255,0.1); padding: 2px 8px; border-radius: 10px; color: #a5f3fc;
     }
@@ -113,10 +114,6 @@
       border-radius: 50%;
       pointer-events: none;
       box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-    }
-    #look-zone {
-      position: absolute; top: 0; right: 0; width: 65%; height: 100%;
-      pointer-events: auto; touch-action: none;
     }
 
     @media (max-width: 768px) {
@@ -174,7 +171,6 @@
     <div id="joystick-zone">
       <div id="joystick-knob"></div>
     </div>
-    <div id="look-zone"></div>
   </div>
 
   <script type="module">
@@ -182,7 +178,7 @@
     import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
     import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-    const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+    const isTouchDevice = ('ontouchstart' in window || navigator.maxTouchPoints > 0) && window.innerWidth <= 1024;
 
     const scene = new THREE.Scene();
     // 窓の外に見える爽やかな昼間の青空スカイブルー
@@ -322,6 +318,8 @@
 
     function updateCeilingVisibility() {
       ceilingObjects.forEach(obj => { obj.visible = ceilingVisible; });
+      if (typeof l313Lights !== 'undefined') l313Lights.visible = ceilingVisible;
+      if (typeof corridorLights !== 'undefined') corridorLights.visible = ceilingVisible;
       ceilingBtn.innerText = `天井: ${ceilingVisible ? '表示中' : '非表示'}`;
       if (ceilingVisible) {
         ceilingBtn.classList.remove('active');
@@ -486,14 +484,25 @@
     });
 
     // ==========================================
-    // マウスドラッグ & ポインタロック操作
+    // マウスドラッグ & ポインタロック操作 (PC)
     // ==========================================
     let isMouseDown = false;
     let prevMouseX = 0;
     let prevMouseY = 0;
 
-    renderer.domElement.addEventListener('mousedown', (e) => {
+    window.addEventListener('contextmenu', (e) => {
+      // 画面操作中の右クリックメニュー誤表示を防止
+      if (e.target === renderer.domElement || e.target.closest('#bottom-guide') || e.target.closest('#mobile-controls')) {
+        e.preventDefault();
+      }
+    });
+
+    window.addEventListener('mousedown', (e) => {
       if (!isWalkMode) return;
+      // ボタンやナビ操作のクリックは除外
+      if (e.target.closest('button') || e.target.closest('#nav-controls') || e.target.closest('#minimap-container') || e.target.closest('#joystick-zone')) {
+        return;
+      }
       isMouseDown = true;
       prevMouseX = e.clientX;
       prevMouseY = e.clientY;
@@ -506,7 +515,7 @@
     window.addEventListener('mousemove', (e) => {
       if (!isWalkMode) return;
 
-      // 1. ポインタロック中
+      // 1. ポインタ固定中 (FPSモード: マウス移動だけで視線追従)
       if (document.pointerLockElement === renderer.domElement) {
         yaw -= e.movementX * 0.0024;
         pitch -= e.movementY * 0.0024;
@@ -529,10 +538,20 @@
       }
     });
 
-    // ダブルクリックでポインタ固定 (FPSモード)
-    renderer.domElement.addEventListener('dblclick', () => {
-      if (isWalkMode && !isTouchDevice) {
+    // ダブルクリックでポインタ固定 (FPSモード切り替え)
+    window.addEventListener('dblclick', (e) => {
+      if (isWalkMode) {
+        if (e.target.closest('button') || e.target.closest('#nav-controls')) return;
         renderer.domElement.requestPointerLock();
+      }
+    });
+
+    // ポインタロック状態の変化をインジケーターに反映
+    document.addEventListener('pointerlockchange', () => {
+      if (document.pointerLockElement === renderer.domElement) {
+        modeIndicator.innerText = 'モード: 視線追従中 (Escキーで解除)';
+      } else if (isWalkMode) {
+        modeIndicator.innerText = 'モード: 歩行 (WASD移動 / ドラッグで視点)';
       }
     });
 
@@ -577,19 +596,26 @@
     joystickZone.addEventListener('touchend', resetJoy);
     joystickZone.addEventListener('touchcancel', resetJoy);
 
-    // タッチスワイプ視線回転
-    const lookZone = document.getElementById('look-zone');
+    // タッチスワイプ視線回転（ジョイスティック・ボタン以外の画面全体で操作可能）
     let lookTouchId = null;
     let lastLookX = 0, lastLookY = 0;
 
-    lookZone.addEventListener('touchstart', (e) => {
-      const touch = e.changedTouches[0];
-      lookTouchId = touch.identifier;
-      lastLookX = touch.clientX;
-      lastLookY = touch.clientY;
+    window.addEventListener('touchstart', (e) => {
+      if (!isWalkMode) return;
+      for (let i = 0; i < e.changedTouches.length; i++) {
+        const touch = e.changedTouches[i];
+        if (touch.target.closest('#joystick-zone') || touch.target.closest('button')) continue;
+        if (lookTouchId === null) {
+          lookTouchId = touch.identifier;
+          lastLookX = touch.clientX;
+          lastLookY = touch.clientY;
+          break;
+        }
+      }
     }, { passive: true });
 
-    lookZone.addEventListener('touchmove', (e) => {
+    window.addEventListener('touchmove', (e) => {
+      if (!isWalkMode) return;
       for (let i = 0; i < e.changedTouches.length; i++) {
         const touch = e.changedTouches[i];
         if (touch.identifier === lookTouchId) {
@@ -606,9 +632,16 @@
       }
     }, { passive: true });
 
-    const resetLook = () => { lookTouchId = null; };
-    lookZone.addEventListener('touchend', resetLook);
-    lookZone.addEventListener('touchcancel', resetLook);
+    const resetLook = (e) => {
+      for (let i = 0; i < e.changedTouches.length; i++) {
+        if (e.changedTouches[i].identifier === lookTouchId) {
+          lookTouchId = null;
+          break;
+        }
+      }
+    };
+    window.addEventListener('touchend', resetLook);
+    window.addEventListener('touchcancel', resetLook);
 
     // ==========================================
     // モデル読み込み (classroom.glb)
@@ -623,8 +656,9 @@
           if (child.isMesh) {
             child.castShadow = true;
             child.receiveShadow = true;
-            // 天井オブジェクトの登録
-            if (child.name.toLowerCase().includes('ceiling') || child.name.includes('Ceiling')) {
+            // 天井および天井照明オブジェクトの登録
+            const nameLower = child.name.toLowerCase();
+            if (nameLower.includes('ceiling') || nameLower.includes('fluor') || nameLower.includes('blackboard_light')) {
               ceilingObjects.push(child);
             }
             // 窓ガラス・引き戸ガラスを美しくリアルな透過ガラスに設定
